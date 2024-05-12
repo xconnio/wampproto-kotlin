@@ -3,3 +3,6 @@ lint:
 
 format:
 	ktlint -F
+
+test:
+	./gradlew test
