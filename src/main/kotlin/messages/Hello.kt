@@ -1,10 +1,12 @@
 package io.xconn.messages
 
 class Hello(
-    val realm: String, val authid: String, val authMethods: Array<String>, val roles: Map<String, Any>,
-    val authExtra: Map<String, Any>
+    val realm: String,
+    val authid: String,
+    val authMethods: Array<String>,
+    val roles: Map<String, Any>,
+    val authExtra: Map<String, Any>,
 ) : Message {
-
     companion object {
         const val TYPE = 1
         const val TEXT = "HELLO"

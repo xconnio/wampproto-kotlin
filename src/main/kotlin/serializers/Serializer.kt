@@ -5,6 +5,7 @@ import io.xconn.messages.Message
 
 interface Serializer {
     fun serialize(msg: Message): Any
+
     fun deserialize(data: Any): Message
 }
 

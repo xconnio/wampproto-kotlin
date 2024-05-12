@@ -1,11 +1,9 @@
-import kotlin.test.Test
-import kotlin.test.assertTrue
-
 import io.xconn.messages.Hello
 import io.xconn.serializers.CBORSerializer
 import io.xconn.serializers.JSONSerializer
 import io.xconn.serializers.MsgPackSerializer
-
+import kotlin.test.Test
+import kotlin.test.assertTrue
 
 class TestSerializers {
     private val hello = Hello("realm1", "hello", emptyArray(), emptyMap(), emptyMap())
