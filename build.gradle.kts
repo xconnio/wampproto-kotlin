@@ -13,6 +13,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.14.2")
     implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-cbor:2.14.2")
     implementation("org.msgpack:jackson-dataformat-msgpack:0.9.8")
+    implementation("io.xconn:cryptology:1.0.1")
 
     testImplementation(kotlin("test"))
 }
