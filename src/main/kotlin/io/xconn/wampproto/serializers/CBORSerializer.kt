@@ -1,8 +1,8 @@
-package io.xconn.serializers
+package io.xconn.wampproto.serializers
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.cbor.CBORFactory
-import io.xconn.messages.Message
+import io.xconn.wampproto.messages.Message
 
 class CBORSerializer : Serializer {
     private val mapper = ObjectMapper(CBORFactory())

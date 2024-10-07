@@ -1,7 +1,7 @@
-package io.xconn.serializers
+package io.xconn.wampproto.serializers
 
-import io.xconn.messages.Hello
-import io.xconn.messages.Message
+import io.xconn.wampproto.messages.Hello
+import io.xconn.wampproto.messages.Message
 
 interface Serializer {
     fun serialize(msg: Message): Any

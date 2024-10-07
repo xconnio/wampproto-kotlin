@@ -1,4 +1,4 @@
-package io.xconn.auth
+package io.xconn.wampproto.auth
 
 import io.xconn.cryptology.CryptoSign
 import io.xconn.cryptology.KeyPair

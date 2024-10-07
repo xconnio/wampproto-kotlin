@@ -1,8 +1,8 @@
-package io.xconn.serializers
+package io.xconn.wampproto.serializers
 
 import com.fasterxml.jackson.core.JsonFactory
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.xconn.messages.Message
+import io.xconn.wampproto.messages.Message
 
 class JSONSerializer : Serializer {
     private val mapper = ObjectMapper(JsonFactory())

@@ -1,4 +1,4 @@
-package io.xconn.messages
+package io.xconn.wampproto.messages
 
 class Hello(
     val realm: String,
