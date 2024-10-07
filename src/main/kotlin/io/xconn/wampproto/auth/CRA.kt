@@ -1,4 +1,4 @@
-package io.xconn.auth
+package io.xconn.wampproto.auth
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import java.security.SecureRandom

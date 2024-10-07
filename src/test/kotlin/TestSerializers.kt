@@ -1,7 +1,7 @@
-import io.xconn.messages.Hello
-import io.xconn.serializers.CBORSerializer
-import io.xconn.serializers.JSONSerializer
-import io.xconn.serializers.MsgPackSerializer
+import io.xconn.wampproto.messages.Hello
+import io.xconn.wampproto.serializers.CBORSerializer
+import io.xconn.wampproto.serializers.JSONSerializer
+import io.xconn.wampproto.serializers.MsgPackSerializer
 import kotlin.test.Test
 import kotlin.test.assertTrue
 

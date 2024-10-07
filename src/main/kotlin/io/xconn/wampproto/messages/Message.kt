@@ -1,4 +1,4 @@
-package io.xconn.messages
+package io.xconn.wampproto.messages
 
 interface Message {
     fun marshal(): Array<Any>
