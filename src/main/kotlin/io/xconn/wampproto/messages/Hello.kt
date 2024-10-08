@@ -1,56 +1,108 @@
 package io.xconn.wampproto.messages
 
-class Hello(
-    val realm: String,
-    val authid: String,
-    val authMethods: Array<String>,
-    val roles: Map<String, Any>,
-    val authExtra: Map<String, Any>,
-) : Message {
+interface IHelloFields {
+    val realm: String
+    val roles: Map<String, Any>
+    val authID: String
+    val authMethods: List<Any>
+    val authExtra: Map<String, Any>
+}
+
+class HelloFields(
+    private val _realm: String,
+    private val _roles: Map<String, Any>,
+    private val _authid: String,
+    private val _authmethods: List<Any>,
+    private val _authextra: Map<String, Any> = emptyMap(),
+) : IHelloFields {
+    override val realm: String get() = _realm
+    override val roles: Map<String, Any> get() = _roles
+    override val authID: String get() = _authid
+    override val authMethods: List<Any> get() = _authmethods
+    override val authExtra: Map<String, Any> get() = _authextra
+}
+
+class Hello : Message {
     companion object {
         const val TYPE = 1
         const val TEXT = "HELLO"
 
-        fun parse(msg: Array<Any>): Message {
-            val realm = msg[1] as String
-            val details = msg[2] as HashMap<*, *>
+        private val validationSpec =
+            ValidationSpec(
+                minLength = 3,
+                maxLength = 3,
+                message = TEXT,
+                spec =
+                    mapOf(
+                        1 to ::validateRealm,
+                        2 to ::validateDetails,
+                    ),
+            )
 
-            val authid = details["authid"] as String
+        fun parse(msg: List<Any>): Message {
+            val fields = validateMessage(msg, TYPE, validationSpec)
 
-            val authMethods: Array<String>
-            if (details["authmethods"] is Array<*>) {
-                authMethods = details["authmethods"] as Array<String>
-            } else {
-                authMethods = emptyArray()
-            }
+            val roles = validateRolesOrRaise(fields.details?.get("roles"), TEXT)
 
-            val roles: HashMap<String, Any>
-            if (details["roles"] is HashMap<*, *>) {
-                roles = details["roles"] as HashMap<String, Any>
-            } else {
-                roles = HashMap()
-            }
+            val authid =
+                fields.details?.get("authid")?.let {
+                    validateStringOrRaise(it, TEXT, "authid")
+                } ?: ""
 
-            val authExtra: HashMap<String, Any>
-            if (details["authextra"] is HashMap<*, *>) {
-                authExtra = details["authextra"] as HashMap<String, Any>
-            } else {
-                authExtra = HashMap()
-            }
+            val authMethods =
+                fields.details?.get("authmethods")?.let {
+                    validateListOrRaise(it, TEXT, "authmethods")
+                } ?: listOf()
 
-            return Hello(realm, authid, authMethods, roles, authExtra)
+            val authExtra =
+                fields.details?.get("authextra")?.let {
+                    validateMapOrRaise(it, TEXT, "authextra")
+                }
+
+            return Hello(fields.realm!!, roles, authid, authMethods, authExtra)
         }
     }
 
-    override fun marshal(): Array<Any> {
+    private var helloFields: IHelloFields
+
+    constructor(
+        realm: String,
+        roles: Map<String, Any>,
+        authid: String,
+        authMethods: List<Any>,
+        authExtra: Map<String, Any>? = null,
+    ) {
+        helloFields = HelloFields(realm, roles, authid, authMethods, authExtra ?: emptyMap())
+    }
+
+    constructor(fields: HelloFields) {
+        this.helloFields = fields
+    }
+
+    val realm: String
+        get() = helloFields.realm
+
+    val roles: Map<String, Any>
+        get() = helloFields.roles
+
+    val authID: String
+        get() = helloFields.authID
+
+    val authMethods: List<Any>
+        get() = helloFields.authMethods
+
+    val authExtra: Map<String, Any>
+        get() = helloFields.authExtra
+
+    override fun marshal(): List<Any> {
         val details = HashMap<String, Any>()
         details["roles"] = roles
 
-        if (authid.isNotEmpty()) details["authid"] = authid
+        if (authID.isNotEmpty()) details["authid"] = authID
         if (authMethods.isNotEmpty()) details["authmethods"] = authMethods
         if (authExtra.isNotEmpty()) details["authextra"] = authExtra
 
-        return arrayOf(TYPE, realm, details)
+        return listOf(TYPE, realm, details)
     }
 
     override fun type(): Int {

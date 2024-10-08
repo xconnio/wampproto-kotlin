@@ -6,12 +6,7 @@ import java.security.SecureRandom
 class CRA {
     companion object {
         @ExperimentalStdlibApi
-        fun generateChallenge(
-            sessionID: Int,
-            authid: String,
-            authRole: String,
-            provider: String,
-        ): String {
+        fun generateChallenge(sessionID: Int, authid: String, authRole: String, provider: String): String {
             val nonceRaw = ByteArray(16)
             SecureRandom().nextBytes(nonceRaw)
             val nonce = nonceRaw.toHexString()
@@ -30,18 +25,11 @@ class CRA {
             return ObjectMapper().writeValueAsString(data)
         }
 
-        fun signChallenge(
-            challenge: String,
-            key: ByteArray,
-        ): String {
+        fun signChallenge(challenge: String, key: ByteArray): String {
             TODO()
         }
 
-        fun verifySignature(
-            signature: String,
-            challenge: String,
-            key: ByteArray,
-        ): Boolean {
+        fun verifySignature(signature: String, challenge: String, key: ByteArray): Boolean {
             TODO()
         }
     }
