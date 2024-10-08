@@ -219,4 +219,58 @@ class UtilTest {
             )
         }
     }
+
+    @Nested
+    inner class ValidateInt {
+        @Test
+        fun validInt() {
+            val error = validateInt(123, 0, "Test")
+            assertNull(error)
+        }
+
+        @Test
+        fun invalidInt() {
+            val error = validateInt("string_value", 0, "Invalid Test")
+            assertNotNull(error)
+            assertEquals(
+                "Invalid Test: value at index 0 must be of type 'int' but was 'class java.lang.String'",
+                error,
+            )
+        }
+    }
+
+    @Nested
+    inner class ValidateID {
+        @Test
+        fun validIntID() {
+            val error = validateID(123, 0, "Test")
+            assertNull(error)
+        }
+
+        @Test
+        fun validLongID() {
+            val error = validateID(123L, 0, "Test")
+            assertNull(error)
+        }
+
+        @Test
+        fun invalidType() {
+            val error = validateID("string_value", 0, "Invalid Test")
+            assertNotNull(error)
+            assertEquals(
+                "Invalid Test: value at index 0 must be of type 'long' but was 'class java.lang.String'",
+                error,
+            )
+        }
+
+        @Test
+        fun outOfRangeID() {
+            val error = validateID(9007199254740992, 0, "Out of Range Test")
+            assertNotNull(error)
+            assertEquals(
+                "Out of Range Test: value at index 0 must be between '$MIN_ID' and '$MAX_ID' but was '9007199254740992'",
+                error,
+            )
+        }
+    }
 }

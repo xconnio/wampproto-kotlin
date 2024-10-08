@@ -4,6 +4,11 @@ import io.xconn.wampproto.ProtocolError
 
 val allowedRoles: Set<String> = setOf("callee", "caller", "publisher", "subscriber", "dealer", "broker")
 
+const val MIN_ID = 1
+
+// Maximum WAMP ID value (2^53 - 1), supported by the browser
+const val MAX_ID = 9007199254740991
+
 data class Fields(
     var requestID: Long? = null,
     var uri: String? = null,
@@ -48,6 +53,10 @@ fun invalidDataTypeError(message: String, index: Int, expectedType: Class<*>, ac
     return "$message: value at index $index must be of type '${expectedType.simpleName}' but was '$actualType'"
 }
 
+fun invalidRangeError(message: String, index: Int, start: String, end: String, actual: String): String {
+    return "$message: value at index $index must be between '$start' and '$end' but was '$actual'"
+}
+
 fun validateString(value: Any, index: Int, message: String): String? {
     if (value !is String) {
         return invalidDataTypeError(
@@ -78,6 +87,45 @@ fun validateMap(value: Any, index: Int, message: String): String? {
             index = index,
             expectedType = Map::class.java,
             actualType = value::class.java.simpleName,
+        )
+    }
+
+    return null
+}
+
+fun validateInt(value: Any, index: Int, message: String): String? {
+    if (value !is Int) {
+        return invalidDataTypeError(
+            message = message,
+            index = index,
+            expectedType = Int::class.java,
+            actualType = value::class.java.toString(),
+        )
+    }
+
+    return null
+}
+
+fun validateID(value: Any, index: Int, message: String): String? {
+    val numValue =
+        when (value) {
+            is Int -> value.toLong()
+            is Long -> value
+            else -> return invalidDataTypeError(
+                message = message,
+                index = index,
+                expectedType = Long::class.java,
+                actualType = value::class.java.toString(),
+            )
+        }
+
+    if (numValue < MIN_ID || numValue > MAX_ID) {
+        return invalidRangeError(
+            message = message,
+            index = index,
+            start = MIN_ID.toString(),
+            end = MAX_ID.toString(),
+            actual = numValue.toString(),
         )
     }
 
