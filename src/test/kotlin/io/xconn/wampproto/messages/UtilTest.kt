@@ -316,4 +316,60 @@ class UtilTest {
             )
         }
     }
+
+    @Nested
+    inner class ValidateAuthMethod {
+        @Test
+        fun validAuthMethod() {
+            val message = listOf("valid_auth_method")
+            val fields = Fields()
+
+            val error = validateAuthMethod(message, 0, fields, "Test")
+
+            assertNull(error)
+            assertEquals("valid_auth_method", fields.authmethod)
+        }
+
+        @Test
+        fun invalidAuthMethod() {
+            val message = listOf(123)
+            val fields = Fields()
+
+            val error = validateAuthMethod(message, 0, fields, "Invalid Test")
+
+            assertNotNull(error)
+            assertEquals(
+                "Invalid Test: value at index 0 must be of type 'String' but was 'Integer'",
+                error,
+            )
+        }
+    }
+
+    @Nested
+    inner class ValidateExtra {
+        @Test
+        fun validExtra() {
+            val message = listOf(mapOf("key" to "value"))
+            val fields = Fields()
+
+            val error = validateExtra(message, 0, fields, "Test")
+
+            assertNull(error)
+            assertEquals(mapOf("key" to "value"), fields.extra)
+        }
+
+        @Test
+        fun invalidExtra() {
+            val message = listOf("invalid_extra")
+            val fields = Fields()
+
+            val error = validateExtra(message, 0, fields, "Invalid Test")
+
+            assertNotNull(error)
+            assertEquals(
+                "Invalid Test: value at index 0 must be of type 'Map' but was 'String'",
+                error,
+            )
+        }
+    }
 }
