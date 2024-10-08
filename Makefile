@@ -6,3 +6,6 @@ format:
 
 test:
 	./gradlew test
+
+install-wampproto:
+	sudo snap install wampproto --edge
