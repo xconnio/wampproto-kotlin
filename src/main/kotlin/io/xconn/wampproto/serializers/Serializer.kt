@@ -9,7 +9,7 @@ interface Serializer {
     fun deserialize(data: Any): Message
 }
 
-fun toMessage(data: Array<Any>): Message {
+fun toMessage(data: List<Any>): Message {
     when (val type = data[0] as Int) {
         Hello.TYPE -> {
             return Hello.parse(data)

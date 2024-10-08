@@ -6,7 +6,7 @@ import kotlin.test.Test
 import kotlin.test.assertTrue
 
 class TestSerializers {
-    private val hello = Hello("realm1", "hello", emptyArray(), emptyMap(), emptyMap())
+    private val hello = Hello("realm1", emptyMap(), "hello", emptyList(), emptyMap())
 
     @Test
     fun json() {

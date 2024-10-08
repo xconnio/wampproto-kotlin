@@ -16,17 +16,11 @@ class CryptoSign {
         }
 
         @ExperimentalStdlibApi
-        fun signChallenge(
-            challenge: String,
-            privateKey: String,
-        ): ByteArray {
+        fun signChallenge(challenge: String, privateKey: String): ByteArray {
             return CryptoSign.sign(privateKey.hexToByteArray(), challenge.hexToByteArray())
         }
 
-        fun verifySignature(
-            signature: String,
-            publicKey: ByteArray,
-        ): Boolean {
+        fun verifySignature(signature: String, publicKey: ByteArray): Boolean {
             TODO("Not Implemented.")
         }
 

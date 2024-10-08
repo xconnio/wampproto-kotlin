@@ -12,7 +12,9 @@ class JSONSerializer : Serializer {
     }
 
     override fun deserialize(data: Any): Message {
-        val o = mapper.readValue(data as String, Array<Any>::class.java)
-        return toMessage(o)
+        val list =
+            (mapper.readValue(data as String, List::class.java) as? List<Any>)
+                ?: throw Exception("Failed to cast message to List<Any>")
+        return toMessage(list)
     }
 }
