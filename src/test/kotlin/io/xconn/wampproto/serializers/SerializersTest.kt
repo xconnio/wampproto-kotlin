@@ -1,11 +1,10 @@
+package io.xconn.wampproto.serializers
+
 import io.xconn.wampproto.messages.Hello
-import io.xconn.wampproto.serializers.CBORSerializer
-import io.xconn.wampproto.serializers.JSONSerializer
-import io.xconn.wampproto.serializers.MsgPackSerializer
 import kotlin.test.Test
 import kotlin.test.assertTrue
 
-class TestSerializers {
+class SerializersTest {
     private val hello = Hello("realm1", emptyMap(), "hello", emptyList(), emptyMap())
 
     @Test
