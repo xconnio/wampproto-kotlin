@@ -5,11 +5,11 @@ import io.xconn.wampproto.ProtocolError
 val allowedRoles: Set<String> = setOf("callee", "caller", "publisher", "subscriber", "dealer", "broker")
 
 data class Fields(
-    var requestID: Int? = null,
+    var requestID: Long? = null,
     var uri: String? = null,
     var args: List<Any>? = null,
     var kwargs: Map<String, Any>? = null,
-    var sessionID: Int? = null,
+    var sessionID: Long? = null,
     var realm: String? = null,
     var authID: String? = null,
     var authrole: String? = null,
@@ -24,9 +24,9 @@ data class Fields(
     var extra: Map<String, Any>? = null,
     var options: Map<String, Any>? = null,
     var details: Map<String, Any>? = null,
-    var subscriptionID: Int? = null,
-    var publicationID: Int? = null,
-    var registrationID: Int? = null,
+    var subscriptionID: Long? = null,
+    var publicationID: Long? = null,
+    var registrationID: Long? = null,
 )
 
 fun sanityCheck(wampMessage: List<Any>, minLength: Int, maxLength: Int, expectedID: Int, name: String) {
