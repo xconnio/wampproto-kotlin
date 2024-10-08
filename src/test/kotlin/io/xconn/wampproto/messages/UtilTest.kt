@@ -273,4 +273,47 @@ class UtilTest {
             )
         }
     }
+
+    @Nested
+    inner class ValidateSessionID {
+        @Test
+        fun validSessionID() {
+            val message = listOf(123L)
+            val fields = Fields()
+
+            val error = validateSessionID(message, 0, fields, "Test")
+
+            assertNull(error)
+            assertNotNull(fields.sessionID)
+            assertEquals(123L, fields.sessionID)
+        }
+
+        @Test
+        fun invalidSessionID() {
+            val message = listOf("invalid_session_id")
+            val fields = Fields()
+
+            val error = validateSessionID(message, 0, fields, "Invalid Test")
+
+            assertNotNull(error)
+            assertEquals(
+                "Invalid Test: value at index 0 must be of type 'long' but was 'class java.lang.String'",
+                error,
+            )
+        }
+
+        @Test
+        fun sessionIDOutOfRange() {
+            val message = listOf(MAX_ID + 1)
+            val fields = Fields()
+
+            val error = validateSessionID(message, 0, fields, "Out of Range Test")
+
+            assertNotNull(error)
+            assertEquals(
+                "Out of Range Test: value at index 0 must be between '1' and '9007199254740991' but was '${MAX_ID + 1}'",
+                error,
+            )
+        }
+    }
 }
