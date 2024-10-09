@@ -372,4 +372,32 @@ class UtilTest {
             )
         }
     }
+
+    @Nested
+    inner class ValidateSignature {
+        @Test
+        fun validSignature() {
+            val message = listOf("valid_signature")
+            val fields = Fields()
+
+            val error = validateSignature(message, 0, fields, "Test")
+
+            assertNull(error)
+            assertEquals("valid_signature", fields.signature)
+        }
+
+        @Test
+        fun invalidSignature() {
+            val message = listOf(123)
+            val fields = Fields()
+
+            val error = validateSignature(message, 0, fields, "Invalid Test")
+
+            assertNotNull(error)
+            assertEquals(
+                "Invalid Test: value at index 0 must be of type 'String' but was 'Integer'",
+                error,
+            )
+        }
+    }
 }

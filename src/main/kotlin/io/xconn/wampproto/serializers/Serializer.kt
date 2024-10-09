@@ -1,5 +1,6 @@
 package io.xconn.wampproto.serializers
 
+import io.xconn.wampproto.messages.Authenticate
 import io.xconn.wampproto.messages.Challenge
 import io.xconn.wampproto.messages.Hello
 import io.xconn.wampproto.messages.Message
@@ -21,6 +22,9 @@ fun toMessage(data: List<Any>): Message {
         }
         Challenge.TYPE -> {
             return Challenge.parse(data)
+        }
+        Authenticate.TYPE -> {
+            return Authenticate.parse(data)
         }
 
         else -> {

@@ -167,6 +167,16 @@ fun validateExtra(msg: List<Any>, index: Int, fields: Fields, message: String): 
     return null
 }
 
+fun validateSignature(msg: List<Any>, index: Int, fields: Fields, message: String): String? {
+    val error = validateString(msg[index], index, message)
+    if (error != null) {
+        return error
+    }
+    fields.signature = msg[index] as String
+
+    return null
+}
+
 fun validateRolesOrRaise(roles: Any?, errorMsg: String): Map<String, Any> {
     if (roles == null) {
         throw ProtocolError("roles cannot be null for $errorMsg")
