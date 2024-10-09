@@ -5,3 +5,11 @@ interface Message {
 
     fun type(): Int
 }
+
+interface BinaryPayload {
+    val payloadIsBinary: Boolean
+
+    val payload: ByteArray?
+
+    val payloadSerializer: Int
+}
