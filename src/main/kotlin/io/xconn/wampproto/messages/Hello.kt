@@ -9,18 +9,12 @@ interface IHelloFields {
 }
 
 class HelloFields(
-    private val _realm: String,
-    private val _roles: Map<String, Any>,
-    private val _authid: String,
-    private val _authmethods: List<Any>,
-    private val _authextra: Map<String, Any> = emptyMap(),
-) : IHelloFields {
-    override val realm: String get() = _realm
-    override val roles: Map<String, Any> get() = _roles
-    override val authID: String get() = _authid
-    override val authMethods: List<Any> get() = _authmethods
-    override val authExtra: Map<String, Any> get() = _authextra
-}
+    override val realm: String,
+    override val roles: Map<String, Any>,
+    override val authID: String,
+    override val authMethods: List<Any>,
+    override val authExtra: Map<String, Any> = emptyMap(),
+) : IHelloFields
 
 class Hello : Message {
     companion object {

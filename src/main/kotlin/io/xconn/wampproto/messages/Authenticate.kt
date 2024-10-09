@@ -6,12 +6,9 @@ interface IAuthenticateFields {
 }
 
 class AuthenticateFields(
-    private val _signature: String,
-    private val _extra: Map<String, Any>,
-) : IAuthenticateFields {
-    override val signature: String get() = _signature
-    override val extra: Map<String, Any> get() = _extra
-}
+    override val signature: String,
+    override val extra: Map<String, Any>,
+) : IAuthenticateFields
 
 class Authenticate : Message {
     companion object {
