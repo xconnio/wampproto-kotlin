@@ -6,12 +6,9 @@ interface IChallengeFields {
 }
 
 class ChallengeFields(
-    private val _authMethod: String,
-    private val _extra: Map<String, Any>,
-) : IChallengeFields {
-    override val authMethod: String get() = _authMethod
-    override val extra: Map<String, Any> get() = _extra
-}
+    override val authMethod: String,
+    override val extra: Map<String, Any>,
+) : IChallengeFields
 
 class Challenge : Message {
     companion object {

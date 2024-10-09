@@ -10,20 +10,13 @@ interface IWelcomeFields {
 }
 
 class WelcomeFields(
-    private val _sessionID: Long,
-    private val _roles: Map<String, Any>,
-    private val _authid: String,
-    private val _authRole: String,
-    private val _authmethod: String,
-    private val _authextra: Map<String, Any> = emptyMap(),
-) : IWelcomeFields {
-    override val sessionID: Long get() = _sessionID
-    override val roles: Map<String, Any> get() = _roles
-    override val authID: String get() = _authid
-    override val authRole: String get() = _authRole
-    override val authMethod: String get() = _authmethod
-    override val authExtra: Map<String, Any> get() = _authextra
-}
+    override val sessionID: Long,
+    override val roles: Map<String, Any>,
+    override val authID: String,
+    override val authRole: String,
+    override val authMethod: String,
+    override val authExtra: Map<String, Any> = emptyMap(),
+) : IWelcomeFields
 
 class Welcome : Message {
     companion object {
