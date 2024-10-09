@@ -9,7 +9,7 @@ import io.xconn.wampproto.serializers.Serializer
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 
-fun isHelloEqual(msg1: Hello, msg2: Hello): Boolean {
+fun isEqual(msg1: Hello, msg2: Hello): Boolean {
     return msg1.authID == msg2.authID &&
         msg1.realm == msg2.realm &&
         msg1.authMethods == msg2.authMethods &&
@@ -33,7 +33,7 @@ fun testHelloMessage(serializerStr: String, serializer: Serializer) {
         "wampproto message hello $realm1 $authMethod --authid $authID -r callee=true -e foo:bar --serializer $serializerStr --output hex"
 
     val msg = runCommandAndDeserialize(serializer, command)
-    assertTrue(isHelloEqual(message, msg as Hello))
+    assertTrue(isEqual(message, msg as Hello))
 }
 
 class HelloMessageTest {

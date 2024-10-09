@@ -132,6 +132,51 @@ fun validateID(value: Any, index: Int, message: String): String? {
     return null
 }
 
+fun validateSessionID(msg: List<Any>, index: Int, fields: Fields, message: String): String? {
+    val error = validateID(msg[index], index, message)
+    if (error != null) {
+        return error
+    }
+
+    when (msg[index]) {
+        is Int -> fields.sessionID = (msg[index] as Int).toLong()
+        is Long -> fields.sessionID = msg[index] as Long
+    }
+
+    return null
+}
+
+fun validateAuthMethod(msg: List<Any>, index: Int, fields: Fields, message: String): String? {
+    val error = validateString(msg[index], index, message)
+    if (error != null) {
+        return error
+    }
+    fields.authmethod = msg[index] as String
+
+    return null
+}
+
+fun validateExtra(msg: List<Any>, index: Int, fields: Fields, message: String): String? {
+    val error = validateMap(msg[index], index, message)
+    if (error != null) {
+        return error
+    }
+    fields.extra = (msg[index] as Map<String, Any> as? Map<String, Any>)
+        ?: throw ProtocolError("Failed to cast details to Map<String, Any>")
+
+    return null
+}
+
+fun validateSignature(msg: List<Any>, index: Int, fields: Fields, message: String): String? {
+    val error = validateString(msg[index], index, message)
+    if (error != null) {
+        return error
+    }
+    fields.signature = msg[index] as String
+
+    return null
+}
+
 fun validateRolesOrRaise(roles: Any?, errorMsg: String): Map<String, Any> {
     if (roles == null) {
         throw ProtocolError("roles cannot be null for $errorMsg")
