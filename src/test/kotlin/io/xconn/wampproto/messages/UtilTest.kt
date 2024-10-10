@@ -61,6 +61,31 @@ class UtilTest {
     }
 
     @Nested
+    inner class ValidateList {
+        @Test
+        fun validList() {
+            val error = validateList(listOf("item1", "item2"), 0, "Test")
+            assertNull(error)
+        }
+
+        @Test
+        fun invalidList() {
+            val error = validateList("invalid_list", 0, "Invalid Test")
+            assertNotNull(error)
+            assertEquals(
+                "Invalid Test: value at index 0 must be of type 'List' but was 'String'",
+                error,
+            )
+        }
+
+        @Test
+        fun emptyList() {
+            val error = validateList(emptyList<Any>(), 0, "Empty List Test")
+            assertNull(error)
+        }
+    }
+
+    @Nested
     inner class ValidateRealm {
         @Test
         fun validRealm() {
@@ -233,7 +258,7 @@ class UtilTest {
             val error = validateInt("string_value", 0, "Invalid Test")
             assertNotNull(error)
             assertEquals(
-                "Invalid Test: value at index 0 must be of type 'int' but was 'class java.lang.String'",
+                "Invalid Test: value at index 0 must be of type 'int' but was 'String'",
                 error,
             )
         }
@@ -258,7 +283,7 @@ class UtilTest {
             val error = validateID("string_value", 0, "Invalid Test")
             assertNotNull(error)
             assertEquals(
-                "Invalid Test: value at index 0 must be of type 'long' but was 'class java.lang.String'",
+                "Invalid Test: value at index 0 must be of type 'long' but was 'String'",
                 error,
             )
         }
@@ -297,7 +322,7 @@ class UtilTest {
 
             assertNotNull(error)
             assertEquals(
-                "Invalid Test: value at index 0 must be of type 'long' but was 'class java.lang.String'",
+                "Invalid Test: value at index 0 must be of type 'long' but was 'String'",
                 error,
             )
         }
@@ -396,6 +421,238 @@ class UtilTest {
             assertNotNull(error)
             assertEquals(
                 "Invalid Test: value at index 0 must be of type 'String' but was 'Integer'",
+                error,
+            )
+        }
+    }
+
+    @Nested
+    inner class ValidateReason {
+        @Test
+        fun validReason() {
+            val message = listOf("valid_reason")
+            val fields = Fields()
+
+            val error = validateReason(message, 0, fields, "Test")
+
+            assertNull(error)
+            assertEquals("valid_reason", fields.reason)
+        }
+
+        @Test
+        fun invalidReason() {
+            val message = listOf(123)
+            val fields = Fields()
+
+            val error = validateReason(message, 0, fields, "Invalid Test")
+
+            assertNotNull(error)
+            assertEquals(
+                "Invalid Test: value at index 0 must be of type 'String' but was 'Integer'",
+                error,
+            )
+        }
+    }
+
+    @Nested
+    inner class ValidateArgs {
+        @Test
+        fun validArgs() {
+            val message = listOf(listOf("arg1", "arg2"))
+            val fields = Fields()
+
+            val error = validateArgs(message, 0, fields, "Test")
+
+            assertNull(error)
+            assertEquals(listOf("arg1", "arg2"), fields.args)
+        }
+
+        @Test
+        fun invalidArgs() {
+            val message = listOf("invalid_args")
+            val fields = Fields()
+
+            val error = validateArgs(message, 0, fields, "Invalid Test")
+
+            assertNotNull(error)
+            assertEquals(
+                "Invalid Test: value at index 0 must be of type 'List' but was 'String'",
+                error,
+            )
+        }
+
+        @Test
+        fun indexOutOfBounds() {
+            val message = listOf<Any>()
+            val fields = Fields()
+
+            val error = validateArgs(message, 0, fields, "Index Test")
+
+            assertNull(error)
+            assertNull(fields.args)
+        }
+    }
+
+    @Nested
+    inner class ValidateKwargs {
+        @Test
+        fun validKwargs() {
+            val message = listOf(mapOf("key" to "value"))
+            val fields = Fields()
+
+            val error = validateKwargs(message, 0, fields, "Test")
+
+            assertNull(error)
+            assertEquals(mapOf("key" to "value"), fields.kwargs)
+        }
+
+        @Test
+        fun invalidKwargs() {
+            val message = listOf("invalid_kwargs")
+            val fields = Fields()
+
+            val error = validateKwargs(message, 0, fields, "Invalid Test")
+
+            assertNotNull(error)
+            assertEquals(
+                "Invalid Test: value at index 0 must be of type 'Map' but was 'String'",
+                error,
+            )
+        }
+
+        @Test
+        fun indexOutOfBounds() {
+            val message = listOf<Any>()
+            val fields = Fields()
+
+            val error = validateKwargs(message, 0, fields, "Index Test")
+
+            assertNull(error)
+            assertNull(fields.kwargs)
+        }
+    }
+
+    @Nested
+    inner class ValidateRequestID {
+        @Test
+        fun validRequestIDAsInt() {
+            val message = listOf(123)
+            val fields = Fields()
+
+            val error = validateRequestID(message, 0, fields, "Test")
+
+            assertNull(error)
+            assertEquals(123L, fields.requestID)
+        }
+
+        @Test
+        fun validRequestIDAsLong() {
+            val message = listOf(123L)
+            val fields = Fields()
+
+            val error = validateRequestID(message, 0, fields, "Test")
+
+            assertNull(error)
+            assertEquals(123L, fields.requestID)
+        }
+
+        @Test
+        fun invalidRequestID() {
+            val message = listOf("invalid")
+            val fields = Fields()
+
+            val error = validateRequestID(message, 0, fields, "Invalid Test")
+
+            assertNotNull(error)
+            assertEquals(
+                "Invalid Test: value at index 0 must be of type 'long' but was 'String'",
+                error,
+            )
+        }
+    }
+
+    @Nested
+    inner class ValidateUri {
+        @Test
+        fun validUri() {
+            val message = listOf("http://example.com")
+            val fields = Fields()
+
+            val error = validateUri(message, 0, fields, "Test")
+
+            assertNull(error)
+            assertEquals("http://example.com", fields.uri)
+        }
+
+        @Test
+        fun invalidUri() {
+            val message = listOf(123)
+            val fields = Fields()
+
+            val error = validateUri(message, 0, fields, "Invalid Test")
+
+            assertNotNull(error)
+            assertEquals(
+                "Invalid Test: value at index 0 must be of type 'String' but was 'Integer'",
+                error,
+            )
+        }
+    }
+
+    @Nested
+    inner class ValidateMessageType {
+        @Test
+        fun validMessageType() {
+            val message = listOf(1)
+            val fields = Fields()
+
+            val error = validateMessageType(message, 0, fields, "Test")
+
+            assertNull(error)
+            assertEquals(1, fields.messageType)
+        }
+
+        @Test
+        fun invalidMessageType() {
+            val message = listOf("not_an_integer")
+            val fields = Fields()
+
+            val error = validateMessageType(message, 0, fields, "Invalid Test")
+
+            assertNotNull(error)
+            assertEquals(
+                "Invalid Test: value at index 0 must be of type 'int' but was 'String'",
+                error,
+            )
+        }
+    }
+
+    @Nested
+    inner class ValidateOptions {
+        @Test
+        fun validOptions() {
+            val message = listOf(1, mapOf("key1" to "value1", "key2" to "value2"))
+            val fields = Fields()
+
+            val error = validateOptions(message, 1, fields, "Test")
+
+            assertNull(error)
+            assertNotNull(fields.options)
+            assertEquals(2, fields.options?.size)
+            assertEquals("value1", fields.options?.get("key1"))
+            assertEquals("value2", fields.options?.get("key2"))
+        }
+
+        @Test
+        fun invalidOptions() {
+            val message = listOf(1, "invalid_options")
+            val fields = Fields()
+
+            val error = validateOptions(message, 1, fields, "Invalid Test")
+
+            assertNotNull(error)
+            assertEquals(
+                "Invalid Test: value at index 1 must be of type 'Map' but was 'String'",
                 error,
             )
         }
