@@ -80,6 +80,19 @@ fun validateRealm(msg: List<Any>, index: Int, fields: Fields, message: String): 
     return null
 }
 
+fun validateList(value: Any, index: Int, message: String): String? {
+    if (value !is List<*>) {
+        return invalidDataTypeError(
+            message = message,
+            index = index,
+            expectedType = List::class.java,
+            actualType = value::class.java.simpleName,
+        )
+    }
+
+    return null
+}
+
 fun validateMap(value: Any, index: Int, message: String): String? {
     if (value !is Map<*, *>) {
         return invalidDataTypeError(
@@ -99,7 +112,7 @@ fun validateInt(value: Any, index: Int, message: String): String? {
             message = message,
             index = index,
             expectedType = Int::class.java,
-            actualType = value::class.java.toString(),
+            actualType = value::class.java.simpleName,
         )
     }
 
@@ -115,7 +128,7 @@ fun validateID(value: Any, index: Int, message: String): String? {
                 message = message,
                 index = index,
                 expectedType = Long::class.java,
-                actualType = value::class.java.toString(),
+                actualType = value::class.java.simpleName,
             )
         }
 
@@ -142,6 +155,40 @@ fun validateSessionID(msg: List<Any>, index: Int, fields: Fields, message: Strin
         is Int -> fields.sessionID = (msg[index] as Int).toLong()
         is Long -> fields.sessionID = msg[index] as Long
     }
+
+    return null
+}
+
+fun validateRequestID(msg: List<Any>, index: Int, fields: Fields, message: String): String? {
+    val error = validateID(msg[index], index, message)
+    if (error != null) {
+        return error
+    }
+
+    when (msg[index]) {
+        is Int -> fields.requestID = (msg[index] as Int).toLong()
+        is Long -> fields.requestID = msg[index] as Long
+    }
+
+    return null
+}
+
+fun validateUri(msg: List<Any>, index: Int, fields: Fields, message: String): String? {
+    val error = validateString(msg[index], index, message)
+    if (error != null) {
+        return error
+    }
+    fields.uri = msg[index] as String
+
+    return null
+}
+
+fun validateMessageType(msg: List<Any>, index: Int, fields: Fields, message: String): String? {
+    val error = validateInt(msg[index], index, message)
+    if (error != null) {
+        return error
+    }
+    fields.messageType = msg[index] as Int
 
     return null
 }
@@ -240,6 +287,51 @@ fun validateDetails(msg: List<Any>, index: Int, fields: Fields, message: String)
     }
     fields.details = ((msg[index] as Map<*, *>).mapKeys { it.key.toString() } as? Map<String, Any>)
         ?: throw ProtocolError("Failed to cast details to Map<String, Any>")
+
+    return null
+}
+
+fun validateOptions(msg: List<Any>, index: Int, fields: Fields, message: String): String? {
+    val error = validateMap(msg[index], index, message)
+    if (error != null) {
+        return error
+    }
+    fields.options = (msg[index] as? Map<String, Any>)
+        ?: throw ProtocolError("Failed to cast details to Map<String, Any>")
+
+    return null
+}
+
+fun validateReason(msg: List<Any>, index: Int, fields: Fields, message: String): String? {
+    val error = validateString(msg[index], index, message)
+    if (error != null) {
+        return error
+    }
+    fields.reason = msg[index] as String
+
+    return null
+}
+
+fun validateArgs(msg: List<Any>, index: Int, fields: Fields, message: String): String? {
+    if (msg.size > index) {
+        val error = validateList(msg[index], index, message)
+        if (error != null) {
+            return error
+        }
+        fields.args = (msg[index] as? List<Any>) ?: throw ProtocolError("Failed to cast details to List<Any>")
+    }
+
+    return null
+}
+
+fun validateKwargs(msg: List<Any>, index: Int, fields: Fields, message: String): String? {
+    if (msg.size > index) {
+        val error = validateMap(msg[index], index, message)
+        if (error != null) {
+            return error
+        }
+        fields.kwargs = (msg[index] as? Map<String, Any>) ?: throw ProtocolError("Failed to cast details to Map<String, Any>")
+    }
 
     return null
 }
