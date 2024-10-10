@@ -9,6 +9,7 @@ import io.xconn.wampproto.messages.Goodbye
 import io.xconn.wampproto.messages.Hello
 import io.xconn.wampproto.messages.Interrupt
 import io.xconn.wampproto.messages.Message
+import io.xconn.wampproto.messages.Register
 import io.xconn.wampproto.messages.Welcome
 
 interface Serializer {
@@ -45,6 +46,9 @@ fun toMessage(data: List<Any>): Message {
         }
         Goodbye.TYPE -> {
             return Goodbye.parse(data)
+        }
+        Register.TYPE -> {
+            return Register.parse(data)
         }
 
         else -> {
