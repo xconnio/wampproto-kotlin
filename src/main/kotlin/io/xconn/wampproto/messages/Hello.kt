@@ -17,6 +17,22 @@ class HelloFields(
 ) : IHelloFields
 
 class Hello : Message {
+    private var helloFields: IHelloFields
+
+    constructor(
+        realm: String,
+        roles: Map<String, Any>,
+        authid: String,
+        authMethods: List<Any>,
+        authExtra: Map<String, Any>? = null,
+    ) {
+        helloFields = HelloFields(realm, roles, authid, authMethods, authExtra ?: emptyMap())
+    }
+
+    constructor(fields: HelloFields) {
+        this.helloFields = fields
+    }
+
     companion object {
         const val TYPE = 1
         const val TEXT = "HELLO"
@@ -55,22 +71,6 @@ class Hello : Message {
 
             return Hello(fields.realm!!, roles, authid, authMethods, authExtra)
         }
-    }
-
-    private var helloFields: IHelloFields
-
-    constructor(
-        realm: String,
-        roles: Map<String, Any>,
-        authid: String,
-        authMethods: List<Any>,
-        authExtra: Map<String, Any>? = null,
-    ) {
-        helloFields = HelloFields(realm, roles, authid, authMethods, authExtra ?: emptyMap())
-    }
-
-    constructor(fields: HelloFields) {
-        this.helloFields = fields
     }
 
     val realm: String
