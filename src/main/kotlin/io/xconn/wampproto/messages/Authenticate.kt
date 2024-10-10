@@ -11,6 +11,16 @@ class AuthenticateFields(
 ) : IAuthenticateFields
 
 class Authenticate : Message {
+    private var authenticateFields: IAuthenticateFields
+
+    constructor(signature: String, extra: Map<String, Any>) {
+        authenticateFields = AuthenticateFields(signature, extra)
+    }
+
+    constructor(fields: AuthenticateFields) {
+        this.authenticateFields = fields
+    }
+
     companion object {
         const val TYPE = 5
         const val TEXT = "AUTHENTICATE"
@@ -32,16 +42,6 @@ class Authenticate : Message {
 
             return Authenticate(fields.signature!!, fields.extra!!)
         }
-    }
-
-    private var authenticateFields: IAuthenticateFields
-
-    constructor(signature: String, extra: Map<String, Any>) {
-        authenticateFields = AuthenticateFields(signature, extra)
-    }
-
-    constructor(fields: AuthenticateFields) {
-        this.authenticateFields = fields
     }
 
     val signature: String

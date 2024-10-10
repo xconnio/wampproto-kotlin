@@ -11,6 +11,16 @@ class ChallengeFields(
 ) : IChallengeFields
 
 class Challenge : Message {
+    private var challengeFields: IChallengeFields
+
+    constructor(authMethod: String, extra: Map<String, Any>) {
+        challengeFields = ChallengeFields(authMethod, extra)
+    }
+
+    constructor(fields: ChallengeFields) {
+        this.challengeFields = fields
+    }
+
     companion object {
         const val TYPE = 4
         const val TEXT = "CHALLENGE"
@@ -32,16 +42,6 @@ class Challenge : Message {
 
             return Challenge(fields.authmethod!!, fields.extra!!)
         }
-    }
-
-    private var challengeFields: IChallengeFields
-
-    constructor(authMethod: String, extra: Map<String, Any>) {
-        challengeFields = ChallengeFields(authMethod, extra)
-    }
-
-    constructor(fields: ChallengeFields) {
-        this.challengeFields = fields
     }
 
     val authMethod: String

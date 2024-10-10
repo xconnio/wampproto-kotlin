@@ -19,6 +19,23 @@ class WelcomeFields(
 ) : IWelcomeFields
 
 class Welcome : Message {
+    private var welcomeFields: IWelcomeFields
+
+    constructor(
+        sessionID: Long,
+        roles: Map<String, Any>,
+        authid: String,
+        authRole: String,
+        authMethod: String,
+        authExtra: Map<String, Any>? = null,
+    ) {
+        welcomeFields = WelcomeFields(sessionID, roles, authid, authRole, authMethod, authExtra ?: emptyMap())
+    }
+
+    constructor(fields: WelcomeFields) {
+        this.welcomeFields = fields
+    }
+
     companion object {
         const val TYPE = 2
         const val TEXT = "WELCOME"
@@ -51,23 +68,6 @@ class Welcome : Message {
 
             return Welcome(fields.sessionID!!, roles, authid, authRole, authMethod, authExtra)
         }
-    }
-
-    private var welcomeFields: IWelcomeFields
-
-    constructor(
-        sessionID: Long,
-        roles: Map<String, Any>,
-        authid: String,
-        authRole: String,
-        authMethod: String,
-        authExtra: Map<String, Any>? = null,
-    ) {
-        welcomeFields = WelcomeFields(sessionID, roles, authid, authRole, authMethod, authExtra ?: emptyMap())
-    }
-
-    constructor(fields: WelcomeFields) {
-        this.welcomeFields = fields
     }
 
     val sessionID: Long
