@@ -187,6 +187,20 @@ fun validateRegistrationID(msg: List<Any>, index: Int, fields: Fields, message: 
     return null
 }
 
+fun validateSubscriptionID(msg: List<Any>, index: Int, fields: Fields, message: String): String? {
+    val error = validateID(msg[index], index, message)
+    if (error != null) {
+        return error
+    }
+
+    when (msg[index]) {
+        is Int -> fields.subscriptionID = (msg[index] as Int).toLong()
+        is Long -> fields.subscriptionID = msg[index] as Long
+    }
+
+    return null
+}
+
 fun validateUri(msg: List<Any>, index: Int, fields: Fields, message: String): String? {
     val error = validateString(msg[index], index, message)
     if (error != null) {
