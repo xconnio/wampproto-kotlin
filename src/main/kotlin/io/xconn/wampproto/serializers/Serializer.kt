@@ -9,6 +9,7 @@ import io.xconn.wampproto.messages.Error
 import io.xconn.wampproto.messages.Goodbye
 import io.xconn.wampproto.messages.Hello
 import io.xconn.wampproto.messages.Interrupt
+import io.xconn.wampproto.messages.Invocation
 import io.xconn.wampproto.messages.Message
 import io.xconn.wampproto.messages.Register
 import io.xconn.wampproto.messages.Registered
@@ -81,6 +82,9 @@ fun toMessage(data: List<Any>): Message {
         }
         Call.TYPE -> {
             return Call.parse(data)
+        }
+        Invocation.TYPE -> {
+            return Invocation.parse(data)
         }
 
         else -> {
