@@ -639,6 +639,34 @@ class UtilTest {
     }
 
     @Nested
+    inner class ValidateTopic {
+        @Test
+        fun validTopic() {
+            val message = listOf("http://xconn.io")
+            val fields = Fields()
+
+            val error = validateTopic(message, 0, fields, "Test")
+
+            assertNull(error)
+            assertEquals("http://xconn.io", fields.topic)
+        }
+
+        @Test
+        fun invalidTopic() {
+            val message = listOf(123)
+            val fields = Fields()
+
+            val error = validateTopic(message, 0, fields, "Invalid Test")
+
+            assertNotNull(error)
+            assertEquals(
+                "Invalid Test: value at index 0 must be of type 'String' but was 'Integer'",
+                error,
+            )
+        }
+    }
+
+    @Nested
     inner class ValidateMessageType {
         @Test
         fun validMessageType() {

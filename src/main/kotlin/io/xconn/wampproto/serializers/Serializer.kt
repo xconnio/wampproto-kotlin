@@ -11,6 +11,7 @@ import io.xconn.wampproto.messages.Interrupt
 import io.xconn.wampproto.messages.Message
 import io.xconn.wampproto.messages.Register
 import io.xconn.wampproto.messages.Registered
+import io.xconn.wampproto.messages.Subscribe
 import io.xconn.wampproto.messages.Unregister
 import io.xconn.wampproto.messages.Unregistered
 import io.xconn.wampproto.messages.Welcome
@@ -61,6 +62,9 @@ fun toMessage(data: List<Any>): Message {
         }
         Unregistered.TYPE -> {
             return Unregistered.parse(data)
+        }
+        Subscribe.TYPE -> {
+            return Subscribe.parse(data)
         }
 
         else -> {

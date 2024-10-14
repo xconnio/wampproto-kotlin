@@ -197,6 +197,16 @@ fun validateUri(msg: List<Any>, index: Int, fields: Fields, message: String): St
     return null
 }
 
+fun validateTopic(msg: List<Any>, index: Int, fields: Fields, message: String): String? {
+    val error = validateString(msg[index], index, message)
+    if (error != null) {
+        return error
+    }
+    fields.topic = msg[index] as String
+
+    return null
+}
+
 fun validateMessageType(msg: List<Any>, index: Int, fields: Fields, message: String): String? {
     val error = validateInt(msg[index], index, message)
     if (error != null) {
