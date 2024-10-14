@@ -2,15 +2,18 @@ package io.xconn.wampproto.serializers
 
 import io.xconn.wampproto.messages.Abort
 import io.xconn.wampproto.messages.Authenticate
+import io.xconn.wampproto.messages.Call
 import io.xconn.wampproto.messages.Cancel
 import io.xconn.wampproto.messages.Challenge
 import io.xconn.wampproto.messages.Error
 import io.xconn.wampproto.messages.Goodbye
 import io.xconn.wampproto.messages.Hello
 import io.xconn.wampproto.messages.Interrupt
+import io.xconn.wampproto.messages.Invocation
 import io.xconn.wampproto.messages.Message
 import io.xconn.wampproto.messages.Register
 import io.xconn.wampproto.messages.Registered
+import io.xconn.wampproto.messages.Result
 import io.xconn.wampproto.messages.Subscribe
 import io.xconn.wampproto.messages.Subscribed
 import io.xconn.wampproto.messages.Unregister
@@ -18,6 +21,7 @@ import io.xconn.wampproto.messages.Unregistered
 import io.xconn.wampproto.messages.Unsubscribe
 import io.xconn.wampproto.messages.Unsubscribed
 import io.xconn.wampproto.messages.Welcome
+import io.xconn.wampproto.messages.Yield
 
 interface Serializer {
     fun serialize(msg: Message): Any
@@ -77,6 +81,18 @@ fun toMessage(data: List<Any>): Message {
         }
         Unsubscribed.TYPE -> {
             return Unsubscribed.parse(data)
+        }
+        Call.TYPE -> {
+            return Call.parse(data)
+        }
+        Invocation.TYPE -> {
+            return Invocation.parse(data)
+        }
+        Yield.TYPE -> {
+            return Yield.parse(data)
+        }
+        Result.TYPE -> {
+            return Result.parse(data)
         }
 
         else -> {
