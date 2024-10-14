@@ -16,6 +16,7 @@ import io.xconn.wampproto.messages.Subscribed
 import io.xconn.wampproto.messages.Unregister
 import io.xconn.wampproto.messages.Unregistered
 import io.xconn.wampproto.messages.Unsubscribe
+import io.xconn.wampproto.messages.Unsubscribed
 import io.xconn.wampproto.messages.Welcome
 
 interface Serializer {
@@ -73,6 +74,9 @@ fun toMessage(data: List<Any>): Message {
         }
         Unsubscribe.TYPE -> {
             return Unsubscribe.parse(data)
+        }
+        Unsubscribed.TYPE -> {
+            return Unsubscribed.parse(data)
         }
 
         else -> {
