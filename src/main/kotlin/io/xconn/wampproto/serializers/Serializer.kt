@@ -2,6 +2,7 @@ package io.xconn.wampproto.serializers
 
 import io.xconn.wampproto.messages.Abort
 import io.xconn.wampproto.messages.Authenticate
+import io.xconn.wampproto.messages.Call
 import io.xconn.wampproto.messages.Cancel
 import io.xconn.wampproto.messages.Challenge
 import io.xconn.wampproto.messages.Error
@@ -77,6 +78,9 @@ fun toMessage(data: List<Any>): Message {
         }
         Unsubscribed.TYPE -> {
             return Unsubscribed.parse(data)
+        }
+        Call.TYPE -> {
+            return Call.parse(data)
         }
 
         else -> {
