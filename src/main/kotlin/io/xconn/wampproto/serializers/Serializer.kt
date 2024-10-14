@@ -20,6 +20,7 @@ import io.xconn.wampproto.messages.Unregistered
 import io.xconn.wampproto.messages.Unsubscribe
 import io.xconn.wampproto.messages.Unsubscribed
 import io.xconn.wampproto.messages.Welcome
+import io.xconn.wampproto.messages.Yield
 
 interface Serializer {
     fun serialize(msg: Message): Any
@@ -85,6 +86,9 @@ fun toMessage(data: List<Any>): Message {
         }
         Invocation.TYPE -> {
             return Invocation.parse(data)
+        }
+        Yield.TYPE -> {
+            return Yield.parse(data)
         }
 
         else -> {
