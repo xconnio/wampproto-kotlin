@@ -19,13 +19,55 @@ fun isEqual(msg1: Error, msg2: Error): Boolean {
 }
 
 fun testErrorMessage(serializerStr: String, serializer: Serializer) {
-    val message = Error(1, 1, "wamp.error", details = emptyMap())
-    val command =
-        "wampproto message error ${message.messageType} ${message.requestID} ${message.uri}" +
-            " --serializer $serializerStr --output hex"
+    val testCases =
+        mapOf(
+            "wampproto message error 1 3 io.xconn.echo -d foo=bar --serializer $serializerStr --output hex" to
+                Error(1, 3, "io.xconn.echo", details = mapOf("foo" to "bar")),
+            "wampproto message error 1 3 io.xconn.echo -d foo=bar args --serializer $serializerStr --output hex" to
+                Error(
+                    1,
+                    3,
+                    "io.xconn.echo",
+                    args = listOf("args"),
+                    details = mapOf("foo" to "bar"),
+                ),
+            "wampproto message error 1 3 io.xconn.echo -d foo=bar -k k=v --serializer $serializerStr --output hex" to
+                Error(
+                    1,
+                    3,
+                    "io.xconn.echo",
+                    kwargs = mapOf("k" to "v"),
+                    details = mapOf("foo" to "bar"),
+                ),
+            "wampproto message error 1 3 io.xconn.echo -d foo=bar args -k k=v --serializer $serializerStr --output hex"
+                to
+                Error(
+                    1,
+                    3,
+                    "io.xconn.echo",
+                    args = listOf("args"),
+                    kwargs = mapOf("k" to "v"),
+                    details = mapOf("foo" to "bar"),
+                ),
+        )
 
-    val msg = runCommandAndDeserialize(serializer, command)
-    assertTrue(isEqual(message, msg as Error))
+    for ((command: String, errorMsg: Error) in testCases) {
+        var message = errorMsg
+        if (message.args == null && message.kwargs != null) {
+            message =
+                Error(
+                    message.messageType,
+                    message.requestID,
+                    message.uri,
+                    emptyList(),
+                    message.kwargs,
+                    message.details,
+                )
+        }
+
+        val msg = runCommandAndDeserialize(serializer, command)
+        assertTrue(isEqual(message, msg as Error))
+    }
 }
 
 class ErrorMessageTest {
