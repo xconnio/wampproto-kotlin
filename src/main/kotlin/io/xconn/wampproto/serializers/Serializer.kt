@@ -11,6 +11,7 @@ import io.xconn.wampproto.messages.Hello
 import io.xconn.wampproto.messages.Interrupt
 import io.xconn.wampproto.messages.Invocation
 import io.xconn.wampproto.messages.Message
+import io.xconn.wampproto.messages.Published
 import io.xconn.wampproto.messages.Register
 import io.xconn.wampproto.messages.Registered
 import io.xconn.wampproto.messages.Result
@@ -93,6 +94,9 @@ fun toMessage(data: List<Any>): Message {
         }
         Result.TYPE -> {
             return Result.parse(data)
+        }
+        Published.TYPE -> {
+            return Published.parse(data)
         }
 
         else -> {
