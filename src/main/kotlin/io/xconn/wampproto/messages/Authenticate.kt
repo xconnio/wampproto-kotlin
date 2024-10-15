@@ -18,7 +18,7 @@ class Authenticate : Message {
     }
 
     constructor(fields: AuthenticateFields) {
-        this.authenticateFields = fields
+        authenticateFields = fields
     }
 
     companion object {

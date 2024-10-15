@@ -21,7 +21,7 @@ class Unregister : Message {
     }
 
     constructor(fields: UnregisterFields) {
-        this.unregisterFields = fields
+        unregisterFields = fields
     }
 
     companion object {

@@ -21,11 +21,11 @@ class Abort : Message {
     private var abortFields: IAbortFields
 
     constructor(details: Map<String, Any>, reason: String, args: List<Any>? = null, kwargs: Map<String, Any>? = null) {
-        this.abortFields = AbortFields(details, reason, args, kwargs)
+        abortFields = AbortFields(details, reason, args, kwargs)
     }
 
     constructor(fields: IAbortFields) {
-        this.abortFields = fields
+        abortFields = fields
     }
 
     companion object {

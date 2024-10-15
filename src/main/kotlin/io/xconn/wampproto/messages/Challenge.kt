@@ -18,7 +18,7 @@ class Challenge : Message {
     }
 
     constructor(fields: ChallengeFields) {
-        this.challengeFields = fields
+        challengeFields = fields
     }
 
     companion object {

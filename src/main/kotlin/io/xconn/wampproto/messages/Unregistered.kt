@@ -16,7 +16,7 @@ class Unregistered : Message {
     }
 
     constructor(fields: UnregisteredFields) {
-        this.unregisteredFields = fields
+        unregisteredFields = fields
     }
 
     companion object {
