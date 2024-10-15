@@ -30,7 +30,7 @@ class Hello : Message {
     }
 
     constructor(fields: HelloFields) {
-        this.helloFields = fields
+        helloFields = fields
     }
 
     companion object {

@@ -33,7 +33,7 @@ class Welcome : Message {
     }
 
     constructor(fields: WelcomeFields) {
-        this.welcomeFields = fields
+        welcomeFields = fields
     }
 
     companion object {

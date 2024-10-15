@@ -21,7 +21,7 @@ class Registered : Message {
     }
 
     constructor(fields: RegisteredFields) {
-        this.registeredFields = fields
+        registeredFields = fields
     }
 
     companion object {

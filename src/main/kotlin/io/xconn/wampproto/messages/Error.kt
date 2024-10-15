@@ -32,11 +32,11 @@ class Error : Message {
         kwargs: Map<String, Any>? = null,
         details: Map<String, Any> = emptyMap(),
     ) {
-        this.errorFields = ErrorFields(messageType, requestID, uri, args, kwargs, details)
+        errorFields = ErrorFields(messageType, requestID, uri, args, kwargs, details)
     }
 
     constructor(fields: IErrorFields) {
-        this.errorFields = fields
+        errorFields = fields
     }
 
     companion object {
