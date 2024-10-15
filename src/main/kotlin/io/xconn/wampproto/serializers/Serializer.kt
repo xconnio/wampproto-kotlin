@@ -6,11 +6,14 @@ import io.xconn.wampproto.messages.Call
 import io.xconn.wampproto.messages.Cancel
 import io.xconn.wampproto.messages.Challenge
 import io.xconn.wampproto.messages.Error
+import io.xconn.wampproto.messages.Event
 import io.xconn.wampproto.messages.Goodbye
 import io.xconn.wampproto.messages.Hello
 import io.xconn.wampproto.messages.Interrupt
 import io.xconn.wampproto.messages.Invocation
 import io.xconn.wampproto.messages.Message
+import io.xconn.wampproto.messages.Publish
+import io.xconn.wampproto.messages.Published
 import io.xconn.wampproto.messages.Register
 import io.xconn.wampproto.messages.Registered
 import io.xconn.wampproto.messages.Result
@@ -93,6 +96,15 @@ fun toMessage(data: List<Any>): Message {
         }
         Result.TYPE -> {
             return Result.parse(data)
+        }
+        Publish.TYPE -> {
+            return Publish.parse(data)
+        }
+        Published.TYPE -> {
+            return Published.parse(data)
+        }
+        Event.TYPE -> {
+            return Event.parse(data)
         }
 
         else -> {
