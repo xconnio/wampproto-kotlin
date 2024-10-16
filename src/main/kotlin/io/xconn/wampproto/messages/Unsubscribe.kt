@@ -51,7 +51,7 @@ class Unsubscribe : Message {
         get() = unsubscribeFields.subscriptionID
 
     override fun marshal(): List<Any> {
-        return listOf(Register.TYPE, requestID, subscriptionID)
+        return listOf(TYPE, requestID, subscriptionID)
     }
 
     override fun type(): Int {
