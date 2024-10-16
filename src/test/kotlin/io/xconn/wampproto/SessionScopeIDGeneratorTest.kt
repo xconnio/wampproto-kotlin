@@ -29,12 +29,12 @@ class SessionScopeIDGeneratorTest {
         val generator = SessionScopeIDGenerator()
 
         // Set ID to just below the MAX_SCOPE to test boundary condition
-        generator.id = MAX_SCOPE - 1
+        generator.id = ID_MAX - 1
 
         val idAtMax = generator.next()
         val idAfterReset = generator.next()
 
-        assertEquals(MAX_SCOPE, idAtMax, "ID should be at MAX_SCOPE.")
+        assertEquals(ID_MAX, idAtMax, "ID should be at MAX_SCOPE.")
         assertEquals(1, idAfterReset, "ID should reset to 1 after reaching MAX_SCOPE.")
     }
 }
