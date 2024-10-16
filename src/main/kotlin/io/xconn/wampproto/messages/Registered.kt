@@ -53,7 +53,7 @@ class Registered : Message {
         get() = registeredFields.registrationID
 
     override fun marshal(): List<Any> {
-        return listOf(Register.TYPE, requestID, registrationID)
+        return listOf(TYPE, requestID, registrationID)
     }
 
     override fun type(): Int {
