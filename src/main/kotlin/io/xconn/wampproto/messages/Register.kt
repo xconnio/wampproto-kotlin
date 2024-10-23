@@ -18,9 +18,9 @@ class Register : Message {
     constructor(
         requestID: Long,
         uri: String,
-        options: Map<String, Any>? = null,
+        options: Map<String, Any> = emptyMap(),
     ) {
-        registerFields = RegisterFields(requestID, uri, options ?: emptyMap())
+        registerFields = RegisterFields(requestID, uri, options)
     }
 
     constructor(fields: RegisterFields) {

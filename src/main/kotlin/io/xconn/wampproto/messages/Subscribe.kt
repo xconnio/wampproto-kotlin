@@ -18,9 +18,9 @@ class Subscribe : Message {
     constructor(
         requestID: Long,
         topic: String,
-        options: Map<String, Any>? = null,
+        options: Map<String, Any> = emptyMap(),
     ) {
-        subscribeFields = SubscribeFields(requestID, topic, options ?: emptyMap())
+        subscribeFields = SubscribeFields(requestID, topic, options)
     }
 
     constructor(fields: SubscribeFields) {
