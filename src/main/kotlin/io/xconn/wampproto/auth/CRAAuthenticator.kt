@@ -6,6 +6,8 @@ import io.xconn.wampproto.messages.Authenticate
 import io.xconn.wampproto.messages.Challenge
 import java.util.Base64
 import javax.crypto.Mac
+import javax.crypto.SecretKeyFactory
+import javax.crypto.spec.PBEKeySpec
 import javax.crypto.spec.SecretKeySpec
 
 class CRAAuthenticator(
@@ -15,6 +17,8 @@ class CRAAuthenticator(
 ) : ClientAuthenticator {
     companion object {
         const val TYPE = "wampcra"
+        const val DEFAULT_ITERATIONS = 1000
+        const val DEFAULT_KEY_LENGTH = 256
     }
 
     override val authMethod: String = TYPE
@@ -24,10 +28,38 @@ class CRAAuthenticator(
             challenge.extra["challenge"] as? String
                 ?: throw IllegalArgumentException("challenge string missing in extra")
 
-        val signed = signWampCRAChallenge(challengeHex, secret.toByteArray(Charsets.UTF_8))
+        val salt = challenge.extra["salt"] as? String
+        var rawSecret: ByteArray
+        if (salt.isNullOrEmpty()) {
+            rawSecret = secret.toByteArray(Charsets.UTF_8)
+        } else {
+            val iterations =
+                (challenge.extra["iterations"] as? Int)?.toInt()
+                    ?: throw IllegalArgumentException("Iterations missing in extra")
+            val keylen =
+                (challenge.extra["keylen"] as? Int)?.toInt()
+                    ?: throw IllegalArgumentException("Key length missing in extra")
+
+            rawSecret = deriveCRAKey(salt, secret, iterations, keylen)
+        }
+
+        val signed = signWampCRAChallenge(challengeHex, rawSecret)
 
         return Authenticate(signed, emptyMap())
     }
+}
+
+internal fun deriveCRAKey(saltStr: String, secret: String, iterations: Int, keyLength: Int): ByteArray {
+    val salt = saltStr.toByteArray(Charsets.UTF_8)
+
+    val effectiveIterations = if (iterations == 0) CRAAuthenticator.DEFAULT_ITERATIONS else iterations
+    val effectiveKeyLength = if (keyLength == 0) CRAAuthenticator.DEFAULT_KEY_LENGTH else keyLength * 8
+
+    val keySpec = PBEKeySpec(secret.toCharArray(), salt, effectiveIterations, effectiveKeyLength)
+    val keyFactory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256")
+    val derivedKeyBytes = keyFactory.generateSecret(keySpec).encoded
+
+    return Base64.getEncoder().encode(derivedKeyBytes)
 }
 
 private fun utcNow(): String {
