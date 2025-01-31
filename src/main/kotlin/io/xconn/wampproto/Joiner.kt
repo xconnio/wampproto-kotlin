@@ -71,7 +71,7 @@ class Joiner(
 
                 authenticate
             }
-            is Abort -> throw Exception("received abort")
+            is Abort -> throw ApplicationError(msg.reason, msg.args, msg.kwargs)
             else -> throw ProtocolError("received ${msg::class.simpleName} message and session is not established yet")
         }
     }

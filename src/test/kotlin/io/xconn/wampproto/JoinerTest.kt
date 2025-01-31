@@ -96,6 +96,6 @@ class JoinerTest {
         val abortMessage = Abort(emptyMap(), "some.message")
         val serializedAbort = JSONSerializer().serialize(abortMessage)
 
-        assertThrows(Exception::class.java) { joiner.receive(serializedAbort) }
+        assertThrows(ApplicationError::class.java) { joiner.receive(serializedAbort) }
     }
 }
