@@ -1,5 +1,6 @@
 package io.xconn.wampproto
 
+import io.xconn.wampproto.messages.Abort
 import io.xconn.wampproto.messages.Call
 import io.xconn.wampproto.messages.Error
 import io.xconn.wampproto.messages.Event
@@ -232,6 +233,9 @@ class Session(private val serializer: Serializer = JSONSerializer()) {
                 msg
             }
             is Goodbye -> {
+                msg
+            }
+            is Abort -> {
                 msg
             }
             else -> throw ProtocolError("unknown message ${msg::class.simpleName}")
