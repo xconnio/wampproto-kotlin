@@ -23,27 +23,27 @@ import io.xconn.wampproto.serializers.Serializer
 
 class Session(private val serializer: Serializer = JSONSerializer()) {
     // data structures for RPC
-    private val callRequests = mutableMapOf<Long, Long>()
-    private val registerRequests = mutableMapOf<Long, Long>()
-    private val registrations = mutableMapOf<Long, Long>()
-    private val invocationRequests = mutableMapOf<Long, Long>()
+    private val callRequests = mutableSetOf<Long>()
+    private val registerRequests = mutableSetOf<Long>()
+    private val registrations = mutableSetOf<Long>()
+    private val invocationRequests = mutableSetOf<Long>()
     private val unregisterRequests = mutableMapOf<Long, Long>()
 
     // data structures for PubSub
-    private val publishRequests = mutableMapOf<Long, Long>()
-    private val subscribeRequests = mutableMapOf<Long, Long>()
-    private val subscriptions = mutableMapOf<Long, Long>()
+    private val publishRequests = mutableSetOf<Long>()
+    private val subscribeRequests = mutableSetOf<Long>()
+    private val subscriptions = mutableSetOf<Long>()
     private val unsubscribeRequests = mutableMapOf<Long, Long>()
 
     fun sendMessage(msg: Message): Any {
         return when (msg) {
             is Call -> {
-                callRequests[msg.requestID] = msg.requestID
+                callRequests.add(msg.requestID)
 
                 serializer.serialize(msg)
             }
             is Register -> {
-                registerRequests[msg.requestID] = msg.requestID
+                registerRequests.add(msg.requestID)
 
                 serializer.serialize(msg)
             }
@@ -53,7 +53,7 @@ class Session(private val serializer: Serializer = JSONSerializer()) {
                 serializer.serialize(msg)
             }
             is Yield -> {
-                if (!invocationRequests.containsKey(msg.requestID)) {
+                if (!invocationRequests.contains(msg.requestID)) {
                     throw IllegalArgumentException("cannot yield for unknown invocation request")
                 }
 
@@ -63,13 +63,13 @@ class Session(private val serializer: Serializer = JSONSerializer()) {
             }
             is Publish -> {
                 if (msg.options["acknowledge"] == true) {
-                    publishRequests[msg.requestID] = msg.requestID
+                    publishRequests.add(msg.requestID)
                 }
 
                 serializer.serialize(msg)
             }
             is Subscribe -> {
-                subscribeRequests[msg.requestID] = msg.requestID
+                subscribeRequests.add(msg.requestID)
 
                 serializer.serialize(msg)
             }
@@ -103,7 +103,7 @@ class Session(private val serializer: Serializer = JSONSerializer()) {
     private fun receiveMessage(msg: Message): Message {
         return when (msg) {
             is Result -> {
-                if (!callRequests.containsKey(msg.requestID)) {
+                if (!callRequests.contains(msg.requestID)) {
                     throw ProtocolError("received RESULT for invalid request ID ${msg.requestID}")
                 }
 
@@ -112,12 +112,12 @@ class Session(private val serializer: Serializer = JSONSerializer()) {
                 msg
             }
             is Registered -> {
-                if (!registerRequests.containsKey(msg.requestID)) {
+                if (!registerRequests.contains(msg.requestID)) {
                     throw ProtocolError("received REGISTERED for invalid request ID ${msg.requestID}")
                 }
 
                 registerRequests.remove(msg.requestID)
-                registrations[msg.registrationID] = msg.registrationID
+                registrations.add(msg.registrationID)
 
                 msg
             }
@@ -127,7 +127,7 @@ class Session(private val serializer: Serializer = JSONSerializer()) {
                 }
 
                 val registrationID = unregisterRequests.remove(msg.requestID)!!
-                if (!registrations.containsKey(registrationID)) {
+                if (!registrations.contains(registrationID)) {
                     throw ProtocolError("received UNREGISTERED for invalid registration ID $registrationID")
                 }
                 registrations.remove(registrationID)
@@ -135,16 +135,16 @@ class Session(private val serializer: Serializer = JSONSerializer()) {
                 msg
             }
             is Invocation -> {
-                if (!registrations.containsKey(msg.registrationID)) {
+                if (!registrations.contains(msg.registrationID)) {
                     throw ProtocolError("received INVOCATION for invalid registration ID ${msg.registrationID}")
                 }
 
-                invocationRequests[msg.requestID] = msg.requestID
+                invocationRequests.add(msg.requestID)
 
                 msg
             }
             is Published -> {
-                if (!publishRequests.containsKey(msg.requestID)) {
+                if (!publishRequests.contains(msg.requestID)) {
                     throw ProtocolError("received PUBLISHED for invalid request ID ${msg.requestID}")
                 }
 
@@ -153,12 +153,12 @@ class Session(private val serializer: Serializer = JSONSerializer()) {
                 msg
             }
             is Subscribed -> {
-                if (!subscribeRequests.containsKey(msg.requestID)) {
+                if (!subscribeRequests.contains(msg.requestID)) {
                     throw ProtocolError("received SUBSCRIBED for invalid request ID ${msg.requestID}")
                 }
 
                 subscribeRequests.remove(msg.requestID)
-                subscriptions[msg.subscriptionID] = msg.subscriptionID
+                subscriptions.add(msg.subscriptionID)
 
                 msg
             }
@@ -168,7 +168,7 @@ class Session(private val serializer: Serializer = JSONSerializer()) {
                 }
 
                 val subscriptionID = unsubscribeRequests.remove(msg.requestID)
-                if (!subscriptions.containsKey(subscriptionID)) {
+                if (!subscriptions.contains(subscriptionID)) {
                     throw ProtocolError("received UNSUBSCRIBED for invalid subscription ID $subscriptionID")
                 }
                 subscriptions.remove(subscriptionID)
@@ -176,7 +176,7 @@ class Session(private val serializer: Serializer = JSONSerializer()) {
                 msg
             }
             is Event -> {
-                if (!subscriptions.containsKey(msg.subscriptionID)) {
+                if (!subscriptions.contains(msg.subscriptionID)) {
                     throw ProtocolError("received EVENT for invalid subscription ID ${msg.subscriptionID}")
                 }
 
@@ -185,14 +185,14 @@ class Session(private val serializer: Serializer = JSONSerializer()) {
             is Error -> {
                 when (msg.messageType) {
                     Call.TYPE -> {
-                        if (!callRequests.containsKey(msg.requestID)) {
+                        if (!callRequests.contains(msg.requestID)) {
                             throw ProtocolError("received ERROR for invalid call request")
                         }
 
                         callRequests.remove(msg.requestID)
                     }
                     Register.TYPE -> {
-                        if (!registerRequests.containsKey(msg.requestID)) {
+                        if (!registerRequests.contains(msg.requestID)) {
                             throw ProtocolError("received ERROR for invalid register request")
                         }
 
@@ -206,7 +206,7 @@ class Session(private val serializer: Serializer = JSONSerializer()) {
                         unregisterRequests.remove(msg.requestID)
                     }
                     Subscribe.TYPE -> {
-                        if (!subscribeRequests.containsKey(msg.requestID)) {
+                        if (!subscribeRequests.contains(msg.requestID)) {
                             throw ProtocolError("received ERROR for invalid subscribe request")
                         }
 
@@ -220,7 +220,7 @@ class Session(private val serializer: Serializer = JSONSerializer()) {
                         unsubscribeRequests.remove(msg.requestID)
                     }
                     Publish.TYPE -> {
-                        if (!publishRequests.containsKey(msg.requestID)) {
+                        if (!publishRequests.contains(msg.requestID)) {
                             throw ProtocolError("received ERROR for invalid publish request")
                         }
 
