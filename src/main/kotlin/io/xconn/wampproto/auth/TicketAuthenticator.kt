@@ -5,8 +5,8 @@ import io.xconn.wampproto.messages.Challenge
 
 class TicketAuthenticator(
     override val authID: String,
-    override val authExtra: Map<String, Any> = emptyMap(),
     private val ticket: String,
+    override val authExtra: Map<String, Any> = emptyMap(),
 ) : ClientAuthenticator {
     companion object {
         const val TYPE = "ticket"

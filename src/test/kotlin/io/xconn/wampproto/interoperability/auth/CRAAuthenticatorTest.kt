@@ -55,7 +55,7 @@ class CRAAuthenticatorTest {
     @Test
     fun testSignWAMPCRASignatureWithSalt() {
         val challenge = Challenge(CRAAuthenticator.TYPE, authExtra)
-        val authenticator = CRAAuthenticator(authID, authExtra, testSecret)
+        val authenticator = CRAAuthenticator(authID, testSecret, authExtra)
         val authenticate = authenticator.authenticate(challenge)
 
         val saltSecret = runCommand("wampproto auth cra derive-key $salt $testSecret -i $iterations -l $keylength")

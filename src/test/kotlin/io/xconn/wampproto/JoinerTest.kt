@@ -61,7 +61,7 @@ class JoinerTest {
 
     @Test
     fun receiveChallengeMessage() {
-        val joiner = Joiner(testRealm, authenticator = TicketAuthenticator(testAuthID, emptyMap(), "test"))
+        val joiner = Joiner(testRealm, authenticator = TicketAuthenticator(testAuthID, "test", emptyMap()))
         joiner.sendHello()
 
         val challengeMessage = Challenge("cryptosign", mapOf("challenge" to "123456"))
