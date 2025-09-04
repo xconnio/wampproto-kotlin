@@ -13,7 +13,7 @@ class CRAAuthenticatorTest {
     private val provider = "provider"
     private val authExtra = mapOf("challenge" to "data")
     private val key = "6d9b906ad60d1f4dd796dbadcc2e2252310565ccdc6fe10b289df5684faf2a46"
-    private val authenticator = CRAAuthenticator(authID, authExtra, key)
+    private val authenticator = CRAAuthenticator(authID, key, authExtra)
     private val validSignature = "DIVL3bKs/Ei91eQyYznzUqEsiTmX705BNEXuicNpi8A="
     private val craChallenge =
         """{"nonce":"cdcb3b12d56e12825be99f38f55ba43f","authprovider":"provider",""" +

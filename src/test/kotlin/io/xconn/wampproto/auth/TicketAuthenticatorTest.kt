@@ -9,7 +9,7 @@ class TicketAuthenticatorTest {
     private val authID = "authID"
     private val authExtra = mapOf("extra" to "data")
     private val ticket = "new ticket"
-    private val authenticator = TicketAuthenticator(authID, authExtra, ticket)
+    private val authenticator = TicketAuthenticator(authID, ticket, authExtra)
 
     @Test
     fun constructor() {

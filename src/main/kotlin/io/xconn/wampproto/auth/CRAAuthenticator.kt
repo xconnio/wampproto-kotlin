@@ -12,8 +12,8 @@ import javax.crypto.spec.SecretKeySpec
 
 class CRAAuthenticator(
     override val authID: String,
-    override val authExtra: Map<String, Any> = emptyMap(),
     private val secret: String,
+    override val authExtra: Map<String, Any> = emptyMap(),
 ) : ClientAuthenticator {
     companion object {
         const val TYPE = "wampcra"
