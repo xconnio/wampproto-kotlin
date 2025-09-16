@@ -12,9 +12,18 @@ class MsgPackSerializer : Serializer {
     }
 
     override fun deserialize(data: Any): Message {
+        val raw =
+            mapper.readValue(data as ByteArray, List::class.java)
+                as? List<Any> ?: throw Exception("Failed to cast message to List<Any>")
+
         val list =
-            (mapper.readValue(data as ByteArray, List::class.java) as? List<Any>)
-                ?: throw Exception("Failed to cast message to List<Any>")
+            raw.map {
+                when (it) {
+                    is Long -> if (it in Int.MIN_VALUE..Int.MAX_VALUE) it.toInt() else it
+                    else -> it
+                }
+            }
+
         return toMessage(list)
     }
 }
